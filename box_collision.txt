@@ -1,0 +1,33 @@
+void ReactOnBoxCollision()
+    {
+        List<Box> boxes = getWorld().getObjects(Box.class);
+        
+        for(Box b : boxes)
+        {
+            double xdist = b.getX() - getX();
+            double ydist = b.getY() - getY();
+            
+            double distMag = Math.sqrt((xdist*xdist)+(ydist*ydist));
+            
+            if(distMag < 55)
+            {
+                if((xdist < 50 && xdist >= 0) && (ydist < 50 || ydist > -50))
+                {
+                    FixSetLocation((int)Math.round(getX()-(50-xdist)),getY()); 
+                }
+                else if((xdist > -50 && xdist < 0) && (ydist < 50 || ydist > -50))
+                {
+                    FixSetLocation((int)Math.round(getX()+(50+xdist)),getY()); 
+                }
+            
+                if((ydist < 50 && ydist >= 0) && (xdist < 50 || xdist > -50))
+                {
+                    FixSetLocation(getX(),(int)Math.round(getY()-(50-ydist))); 
+                }
+                else if((ydist > -50 && ydist < 0) && (xdist < 50 || xdist > -50))
+                {
+                    FixSetLocation(getX(),(int)Math.round(getY()+(50+ydist))); 
+                }
+            }
+        }
+    }
