@@ -45,7 +45,6 @@ public class Box extends Actor
            return Color.WHITE;
         }
     }
-    
     void FixSetLocation(int X,int Y)
     {
         
@@ -55,15 +54,10 @@ public class Box extends Actor
         }
     }
     
-    /**
-     * Act - do whatever the Box wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
-    public void act()
+    public void exist()
     {
-         MyWorld world = (MyWorld)getWorld();  
+      MyWorld world = (MyWorld)getWorld();  
       setLocation(getX()+(int)Math.round(dx), getY()+(int)Math.round(dy));
-      dx = dx * 0.95;
       if (gravity == true)
          {
           dy = dy + 0.25;
@@ -72,8 +66,10 @@ public class Box extends Actor
          {
           dy = dy - 0.25;
          }
-     
-      if (FixGetColorAt(getX(),getY()+25).equals(Color.BLACK) == true
+    }
+    public void coolisionDet()
+    {
+        if (FixGetColorAt(getX(),getY()+25).equals(Color.BLACK) == true
       || FixGetColorAt(getX(),getY()-25).equals(Color.BLACK) == true)
           {
            dy = 0;
@@ -99,7 +95,9 @@ public class Box extends Actor
               FixSetLocation(getX()-1,getY()); 
              } 
          }
-      if (isSpaceKeyDownOnce())
+    }
+    public void GravitySwitch(){
+        if (isSpaceKeyDownOnce())
          {
           if(gravity==false)
              {
@@ -110,9 +108,27 @@ public class Box extends Actor
               gravity = false;
              }
          }
-      if (FixGetColorAt(getX(),getY()).equals(Color.RED) == true)
+    }
+    public void destroy()
+    {
+        MyWorld world = (MyWorld)getWorld();
+        if (FixGetColorAt(getX(),getY()).equals(Color.RED) == true)
          {   
           world.removeObject(this);
-         }   
+         }
+    }
+    
+    /**
+     * Act - do whatever the Box wants to do. This method is called whenever
+     * the 'Act' or 'Run' button gets pressed in the environment.
+     */
+    public void act()
+    {
+         MyWorld world = (MyWorld)getWorld();  
+      setLocation(getX()+(int)Math.round(dx), getY()+(int)Math.round(dy));
+      exist();
+      coolisionDet();
+      GravitySwitch();
+      destroy();
     }
 }

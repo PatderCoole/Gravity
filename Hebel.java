@@ -17,11 +17,15 @@ public class Hebel extends Actor
        MyWorld world = (MyWorld)getWorld();
        if(world.currentLevel == 1)
             {
-            setLocation(100, 150);
+            setLocation(80, 115);
             }
        if(world.currentLevel == 2)
             {
-            setLocation(100, 150);    
+            setLocation(400, 250);    
             }
+       if(world.currentLevel == 3)
+            {
+            setLocation(1300, 1300);    
+            }     
     }
 }

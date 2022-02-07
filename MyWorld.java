@@ -9,6 +9,8 @@ import java.util.List;
 public class MyWorld extends World
 {
     int currentLevel = 0;
+    public int seconds = 0;
+    int frames = 0;
     GreenfootImage level;
     GreenfootSound gfs = new GreenfootSound("001.mp3");
     
@@ -71,5 +73,14 @@ public class MyWorld extends World
     }
     public void removeAllObjects() {
     removeObjects(getObjects(null));
+    }
+    public void Timer()
+    {
+        frames++;
+        if (frames == 60)
+        {
+            frames = 0;
+            seconds++;
+        }
     }
 }

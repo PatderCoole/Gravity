@@ -191,30 +191,10 @@ public class Player extends Actor
           respawn();
          }
     }
-    
-    
-    
-    /**
-     * Act - do whatever the Player wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
-    public void act() 
+    public void BoxReaction()
     {
-      MyWorld world = (MyWorld)getWorld();  
-      setLocation(getX()+(int)Math.round(dx), getY()+(int)Math.round(dy));
-      dx = dx * 0.95;
-      Walking();
-      Jump();   
-      GravitySwitch();
-      Dying();
-      LevelComplete();
-      CollisionDetection();
-      Restart();
-      /*
-       * Die Überprüfung der Box bzw. die Interaktion des Players und der Box
-       * wird derzeit noch bearbeitet.
-       */   
-      /*if(isTouching(Box.class))
+      MyWorld world = (MyWorld)getWorld(); 
+        if(isTouching(Box.class))
       {
            List Boxes = world.getObjects(Box.class);
            float shortest_dist = -1;
@@ -252,7 +232,28 @@ public class Player extends Actor
                       FixSetLocation(getX(),getY()-1);
                     }
            }
-      }*/
+      }
+    }
+    
+    
+    /**
+     * Act - do whatever the Player wants to do. This method is called whenever
+     * the 'Act' or 'Run' button gets pressed in the environment.
+     */
+    public void act() 
+    {
+      MyWorld world = (MyWorld)getWorld();  
+      setLocation(getX()+(int)Math.round(dx), getY()+(int)Math.round(dy));
+      dx = dx * 0.95;
+      Walking();
+      Jump();   
+      GravitySwitch();
+      Dying();
+      LevelComplete();
+      CollisionDetection();
+      Restart();
+      BoxReaction();
+      world.Timer();
      }
 } 
  
