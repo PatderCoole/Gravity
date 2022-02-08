@@ -18,6 +18,7 @@ public class Player extends Actor
     double dx,dy;
     boolean gravity = true;
     boolean SpaceAlreadyPressed = false;
+    boolean toutchingBox = false;
     boolean isSpaceKeyDownOnce()
     {
       boolean PressState = Greenfoot.isKeyDown("Space");
@@ -66,17 +67,12 @@ public class Player extends Actor
     
     
     public void Jump(){
-        if (Greenfoot.isKeyDown("up") 
-      && (FixGetColorAt(getX(),getY()+22).equals(Color.BLACK) == true
-      && gravity == true
-      || isTouching(Box.class)))
+        if (Greenfoot.isKeyDown("up") && (FixGetColorAt(getX(),getY()+22).equals(Color.BLACK) == true || toutchingBox == true) && gravity == true )
          {
           dy = -10;
           igs.play();
          }
-      if (Greenfoot.isKeyDown("down") 
-      && FixGetColorAt(getX(),getY()-22).equals(Color.BLACK) == true
-      && gravity == false)
+      if (Greenfoot.isKeyDown("down") && (FixGetColorAt(getX(),getY()-22).equals(Color.BLACK) == true || toutchingBox == true) && gravity == false)
          {
           dy = +10;
           igs.play();
@@ -154,11 +150,21 @@ public class Player extends Actor
           }
     }
     public void CollisionDetection(){
-        if (FixGetColorAt(getX(),getY()+21).equals(Color.BLACK) == true
-      || FixGetColorAt(getX(),getY()-21).equals(Color.BLACK) == true)
+        if (FixGetColorAt(getX(),getY()+21).equals(Color.BLACK) == true || FixGetColorAt(getX(),getY()-21).equals(Color.BLACK) == true)
           {
            dy = 0;
-           if (FixGetColorAt(getX(),getY()+21).equals(Color.BLACK) == true)
+           if(FixGetColorAt(getX(),getY()+21).equals(Color.BLACK) == true && FixGetColorAt(getX(),getY()-21).equals(Color.BLACK) == true)
+               {
+                   if(gravity == true)
+                   {
+                       FixSetLocation(getX(),getY()-1);
+                   }
+                   else
+                   {
+                       FixSetLocation(getX(),getY()+1);
+                   }
+               }
+           else if (FixGetColorAt(getX(),getY()+21).equals(Color.BLACK) == true)
               {
                FixSetLocation(getX(),getY()-1);  
               }
@@ -167,8 +173,7 @@ public class Player extends Actor
                FixSetLocation(getX(),getY()+1); 
               }
           }
-      if (FixGetColorAt(getX()-34,getY()).equals(Color.BLACK) == true
-      || (FixGetColorAt(getX()+34,getY()).equals(Color.BLACK) == true))
+      if (FixGetColorAt(getX()-34,getY()).equals(Color.BLACK) == true || (FixGetColorAt(getX()+34,getY()).equals(Color.BLACK) == true))
          {
           dx = 0; 
           if(FixGetColorAt(getX()-34,getY()).equals(Color.BLACK) == true)
@@ -191,55 +196,55 @@ public class Player extends Actor
           respawn();
          }
     }
-    public void BoxReaction()
+    
+    
+    //made by H4x0r_000
+    void ReactOnBoxCollision()
     {
-      MyWorld world = (MyWorld)getWorld(); 
-        if(isTouching(Box.class))
-      {
-           List Boxes = world.getObjects(Box.class);
-           float shortest_dist = -1;
-           Box Nearest = null;
-           for(int i = 0; i < Boxes.size(); i++)
-           {
-               Box b = (Box)Boxes.get(i);
-               float dist = (float)Math.sqrt((b.getX()^2)+(b.getY()^2));
-               if(dist < shortest_dist || shortest_dist == -1)
-               {
-                   shortest_dist = dist;
-                   Nearest = b;
-               }
-           }
-           if(Nearest != null)
-           {
-               if(Nearest.getX()<getX())
-               {
-                   dx = 0;
-                   FixSetLocation(getX()+1,getY());
-               }
-               else if(Nearest.getX()>getX())
-                    {
-                      dx = 0;
-                      FixSetLocation(getX()-1,getY());
-                    }
-               if(Nearest.getY()<getY())
-               {
-                 dy = 0;
-                 FixSetLocation(getX(),getY()+1); 
-               }
-               else if(Nearest.getY()>getY())
-                    {
-                      dy = 0;
-                      FixSetLocation(getX(),getY()-1);
-                    }
-           }
-      }
+        List<Box> boxes = getWorld().getObjects(Box.class);
+        
+        for(Box b : boxes)
+        {
+            double xdist = b.getX() - getX();
+            double ydist = b.getY() - getY();
+            
+            double distMag = Math.sqrt(Math.pow(xdist, 2) + Math.pow(ydist, 2));
+            
+            double xdir = xdist / distMag;
+            double ydir = ydist / distMag;
+            
+            double plrBorderDistX = (xdir / (Math.abs(xdir) >= Math.abs(ydir) ? Math.abs(xdir) : Math.abs(ydir))) * 25;
+            double plrBorderDistY = (ydir / (Math.abs(xdir) >= Math.abs(ydir) ? Math.abs(xdir) : Math.abs(ydir))) * 25;
+            
+            double intersectDistX = Math.abs(xdist) - (Math.abs(plrBorderDistX) * 2);
+            double intersectDistY = Math.abs(ydist) - (Math.abs(plrBorderDistY) * 2);
+            
+            if(intersectDistX < 0 || intersectDistY < 0)
+            {
+                toutchingBox = true;
+                if(intersectDistX < intersectDistY)
+                {
+                    FixSetLocation((int)Math.round(getX() + (xdist >= 0 ? intersectDistX : (intersectDistX * (-1)))), getY());
+                }
+                else if(intersectDistY < intersectDistX)
+                {
+                    FixSetLocation(getX(),((int)Math.round(getY() + (ydist >= 0 ? intersectDistY : (intersectDistY * (-1))))));
+                    dy = 0;
+                }
+                else
+                {
+                    FixSetLocation((int)Math.round(getX() + (xdist >= 0 ? intersectDistX : (intersectDistX * (-1)))),((int)Math.round(getY() + (ydist >= 0 ? intersectDistY : (intersectDistY * (-1))))));
+                    dy = 0;
+                }
+            }
+            else
+            {
+                toutchingBox = false;
+            }
+        }
     }
     
     
-    /**
-     * Act - do whatever the Player wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
     public void act() 
     {
       MyWorld world = (MyWorld)getWorld();  
@@ -247,12 +252,12 @@ public class Player extends Actor
       dx = dx * 0.95;
       Walking();
       Jump();   
+      ReactOnBoxCollision();
       GravitySwitch();
       Dying();
       LevelComplete();
       CollisionDetection();
       Restart();
-      BoxReaction();
       world.Timer();
      }
 } 

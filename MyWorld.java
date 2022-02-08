@@ -37,6 +37,9 @@ public class MyWorld extends World
          changeLevel();
          addObject(new Spawn(),165,550);
          addObject(new Hebel(),1300,1300);
+         
+         //remove later
+         addObject(new Box(),384,465);
     }
     public void changeLevel()
     {

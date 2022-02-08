@@ -1,4 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import java.util.List;
 
 /**
  * Write a description of class Box here.
@@ -67,8 +68,8 @@ public class Box extends Actor
           dy = dy - 0.25;
          }
     }
-    public void coolisionDet()
-    {
+    
+    public void CollisionDetection(){
         if (FixGetColorAt(getX(),getY()+25).equals(Color.BLACK) == true
       || FixGetColorAt(getX(),getY()-25).equals(Color.BLACK) == true)
           {
@@ -82,20 +83,21 @@ public class Box extends Actor
                FixSetLocation(getX(),getY()+1); 
               }
           }
-      if (FixGetColorAt(getX()-15,getY()).equals(Color.BLACK) == true
-      || (FixGetColorAt(getX()+15,getY()).equals(Color.BLACK) == true))
+      if (FixGetColorAt(getX()-25,getY()).equals(Color.BLACK) == true
+      || (FixGetColorAt(getX()+25,getY()).equals(Color.BLACK) == true))
          {
           dx = 0; 
-          if(FixGetColorAt(getX()-15,getY()).equals(Color.BLACK) == true)
+          if(FixGetColorAt(getX()-25,getY()).equals(Color.BLACK) == true)
              {
               FixSetLocation(getX()+1,getY());
              }
-         else
+          else
              {
               FixSetLocation(getX()-1,getY()); 
              } 
          }
     }
+    
     public void GravitySwitch(){
         if (isSpaceKeyDownOnce())
          {
@@ -118,17 +120,64 @@ public class Box extends Actor
          }
     }
     
+    //made by H4x0r_000
+    void ReactOnBoxCollision()
+    {
+        List<Box> boxes = getWorld().getObjects(Box.class);
+        
+        for(Box b : boxes)
+        {
+            if(b == this)
+            {
+                return;
+            }
+            
+            double xdist = b.getX() - getX();
+            double ydist = b.getY() - getY();
+            
+            double distMag = Math.sqrt(Math.pow(xdist, 2) + Math.pow(ydist, 2));
+            
+            double xdir = xdist / distMag;
+            double ydir = ydist / distMag;
+            
+            double plrBorderDistX = (xdir / (Math.abs(xdir) >= Math.abs(ydir) ? Math.abs(xdir) : Math.abs(ydir))) * 25;
+            double plrBorderDistY = (ydir / (Math.abs(xdir) >= Math.abs(ydir) ? Math.abs(xdir) : Math.abs(ydir))) * 25;
+            
+            double intersectDistX = Math.abs(xdist) - (Math.abs(plrBorderDistX) * 2);
+            double intersectDistY = Math.abs(ydist) - (Math.abs(plrBorderDistY) * 2);
+            
+            if(intersectDistX < 0 || intersectDistY < 0)
+            {
+                if(intersectDistX < intersectDistY)
+                {
+                    FixSetLocation((int)Math.round(getX() + (xdist >= 0 ? intersectDistX : (intersectDistX * (-1)))), getY());
+                }
+                else if(intersectDistY < intersectDistX)
+                {
+                    FixSetLocation(getX(),((int)Math.round(getY() + (ydist >= 0 ? intersectDistY : (intersectDistY * (-1))))));
+                    dy = 0;
+                }
+                else
+                {
+                    FixSetLocation((int)Math.round(getX() + (xdist >= 0 ? intersectDistX : (intersectDistX * (-1)))),((int)Math.round(getY() + (ydist >= 0 ? intersectDistY : (intersectDistY * (-1))))));
+                    dy = 0;
+                }
+            }
+        }
+    }
+    
     /**
      * Act - do whatever the Box wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     public void act()
     {
-         MyWorld world = (MyWorld)getWorld();  
-      setLocation(getX()+(int)Math.round(dx), getY()+(int)Math.round(dy));
-      exist();
-      coolisionDet();
-      GravitySwitch();
-      destroy();
+        MyWorld world = (MyWorld)getWorld();  
+        exist();
+        setLocation(getX()+(int)Math.round(dx), getY()+(int)Math.round(dy));
+        CollisionDetection();
+        ReactOnBoxCollision();
+        GravitySwitch();
+        destroy();
     }
 }
