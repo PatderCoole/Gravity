@@ -13,6 +13,7 @@ public class MyWorld extends World
     int frames = 0;
     GreenfootImage level;
     GreenfootSound gfs = new GreenfootSound("001.mp3");
+    levelVisual lvlVis;
     
     public void started(){
         gfs.playLoop();
@@ -34,30 +35,38 @@ public class MyWorld extends World
     {    
          super(1200, 800, 1);
          setLevel(0);
+         lvlVis = new levelVisual();
          changeLevel();
          addObject(new Spawn(),165,550);
          addObject(new Hebel(),1300,1300);
+         
+         addObject(lvlVis, getWidth() / 2, getHeight() / 2);
          
          //remove later
          addObject(new Box(),384,465);
     }
     public void changeLevel()
     {
+        
         if(currentLevel == 3)
              {
               level = new GreenfootImage("level4.png");
+              lvlVis.changeVisual(4);
              }
         if(currentLevel == 2)
              {
               level = new GreenfootImage("level3.png");
+              lvlVis.changeVisual(3);
              }
         if(currentLevel == 1)
              {
               level = new GreenfootImage("level2.png");
+              lvlVis.changeVisual(2);
              }
         if(currentLevel == 0)
              {
               level = new GreenfootImage("level1.png");
+              lvlVis.changeVisual(1);
              }          
         setBackground(level);
         
