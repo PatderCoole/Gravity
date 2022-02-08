@@ -44,6 +44,7 @@ public class MyWorld extends World
          
          //remove later
          addObject(new Box(),384,465);
+         setPaintOrder(Player.class, Box.class, Hebel.class, Spawn.class, levelVisual.class);
     }
     public void changeLevel()
     {
