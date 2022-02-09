@@ -5,6 +5,7 @@ public class DebugTools
     
     public DebugTools()
     {
+        
     }
 
     public static void DebugLog(String str)
