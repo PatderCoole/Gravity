@@ -8,13 +8,19 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Hebel extends Actor
 {
-    /**
-     * Act - do whatever the Hebel wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
-    public void act()
+    boolean is_active = false;
+    
+    public void interact()
     {
-       MyWorld world = (MyWorld)getWorld();
+        if (isTouching(Player.class))
+        {
+            is_active = true;
+            setImage("Phone2.png");
+        }
+    }
+    public void check_LevelPosition()
+    {
+        MyWorld world = (MyWorld)getWorld();
        if(world.currentLevel == 1)
             {
             setLocation(80, 115);
@@ -26,6 +32,13 @@ public class Hebel extends Actor
        if(world.currentLevel == 3)
             {
             setLocation(1300, 1300);    
-            }     
+            } 
+    }
+    
+    public void act()
+    {
+       MyWorld world = (MyWorld)getWorld();
+       check_LevelPosition();
+       interact();     
     }
 }

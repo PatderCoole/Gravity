@@ -67,7 +67,7 @@ public class Player extends Actor
     
     
     public void Jump(){
-        if (Greenfoot.isKeyDown("up") && (FixGetColorAt(getX(),getY()+22).equals(Color.BLACK) == true || toutchingBox == true) && gravity == true )
+      if (Greenfoot.isKeyDown("up") && (FixGetColorAt(getX(),getY()+22).equals(Color.BLACK) == true || toutchingBox == true) && gravity == true )
          {
           dy = -10;
           igs.play();
