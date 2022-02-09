@@ -69,35 +69,6 @@ public class Box extends Actor
          }
     }
     
-    public void CollisionDetection(){
-        if (FixGetColorAt(getX(),getY()+25).equals(Color.BLACK) == true
-      || FixGetColorAt(getX(),getY()-25).equals(Color.BLACK) == true)
-          {
-           dy = 0;
-           if (FixGetColorAt(getX(),getY()+25).equals(Color.BLACK) == true)
-              {
-               FixSetLocation(getX(),getY()-1);  
-              }
-           else
-              {
-               FixSetLocation(getX(),getY()+1); 
-              }
-          }
-      if (FixGetColorAt(getX()-25,getY()).equals(Color.BLACK) == true
-      || (FixGetColorAt(getX()+25,getY()).equals(Color.BLACK) == true))
-         {
-          dx = 0; 
-          if(FixGetColorAt(getX()-25,getY()).equals(Color.BLACK) == true)
-             {
-              FixSetLocation(getX()+1,getY());
-             }
-          else
-             {
-              FixSetLocation(getX()-1,getY()); 
-             } 
-         }
-    }
-    
     public void GravitySwitch(){
         if (isSpaceKeyDownOnce())
          {
@@ -166,6 +137,93 @@ public class Box extends Actor
         }
     }
     
+    //made by H4x0r_000
+    void WorldCollision()
+    {
+        int rayLength;
+        for(int direction = 0; direction < 4; direction++)
+        {
+            if(direction % 2 == 0)
+            {
+                rayLength = (int)(getImage().getHeight() / 2) + 1;
+            }
+            else
+            {
+                rayLength = (int)(getImage().getWidth() / 2) + 1;
+            }
+            
+            boolean break_loop = false;
+            for(int i = 1; i < rayLength; i++)
+            {
+                switch(direction)
+                {
+                    case 0:
+                        {
+                            if(FixGetColorAt(getX(), getY() + i).equals(Color.BLACK))
+                            {
+                                if(i == 1)
+                                {
+                                    break_loop = true;
+                                    break;
+                                }   
+                                    
+                                FixSetLocation(getX(), getY() - (rayLength - i));
+                                dy = 0;
+                            }
+                        }break;
+                        
+                    case 1:
+                        {
+                            if(FixGetColorAt(getX() + i, getY()).equals(Color.BLACK))
+                            {
+                                if(i == 1)
+                                {
+                                    break_loop = true;
+                                    break;
+                                }
+                                    
+                                FixSetLocation(getX() - (rayLength - i), getY());
+                            }
+                        }break;
+                        
+                    case 2:
+                        {
+                            if(FixGetColorAt(getX(), getY() - i).equals(Color.BLACK))
+                            {
+                                if(i == 1)
+                                {
+                                    break_loop = true;
+                                    break;
+                                }
+                                    
+                                FixSetLocation(getX(), getY() + (rayLength - i));
+                                dy = 0;
+                            }
+                        }break;
+                        
+                    case 3:
+                        {
+                            if(FixGetColorAt(getX() - i, getY()).equals(Color.BLACK))
+                            {
+                                if(i == 1)
+                                {
+                                    break_loop = true;
+                                    break;
+                                }
+                                    
+                                FixSetLocation(getX() + (rayLength - i), getY());
+                            }
+                        }
+                }
+                
+                if(break_loop == true)
+                    break;
+            
+            }
+        }
+        
+    }
+    
     /**
      * Act - do whatever the Box wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
@@ -175,7 +233,7 @@ public class Box extends Actor
         MyWorld world = (MyWorld)getWorld();  
         exist();
         setLocation(getX()+(int)Math.round(dx), getY()+(int)Math.round(dy));
-        CollisionDetection();
+        WorldCollision();
         ReactOnBoxCollision();
         GravitySwitch();
         destroy();

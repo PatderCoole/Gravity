@@ -149,43 +149,6 @@ public class Player extends Actor
                 }
           }
     }
-    public void CollisionDetection(){
-        if (FixGetColorAt(getX(),getY()+21).equals(Color.BLACK) == true || FixGetColorAt(getX(),getY()-21).equals(Color.BLACK) == true)
-          {
-           dy = 0;
-           if(FixGetColorAt(getX(),getY()+21).equals(Color.BLACK) == true && FixGetColorAt(getX(),getY()-21).equals(Color.BLACK) == true)
-               {
-                   if(gravity == true)
-                   {
-                       FixSetLocation(getX(),getY()-1);
-                   }
-                   else
-                   {
-                       FixSetLocation(getX(),getY()+1);
-                   }
-               }
-           else if (FixGetColorAt(getX(),getY()+21).equals(Color.BLACK) == true)
-              {
-               FixSetLocation(getX(),getY()-1);  
-              }
-           else
-              {
-               FixSetLocation(getX(),getY()+1); 
-              }
-          }
-      if (FixGetColorAt(getX()-34,getY()).equals(Color.BLACK) == true || (FixGetColorAt(getX()+34,getY()).equals(Color.BLACK) == true))
-         {
-          dx = 0; 
-          if(FixGetColorAt(getX()-34,getY()).equals(Color.BLACK) == true)
-             {
-              FixSetLocation(getX()+1,getY());
-             }
-          else
-             {
-              FixSetLocation(getX()-1,getY()); 
-             } 
-         }
-    }
     public void Restart(){
          if (FixGetColorAt(getX(),getY()).equals(Magenta) == true)
          {
@@ -244,6 +207,92 @@ public class Player extends Actor
         }
     }
     
+    //made by H4x0r_000
+    void WorldCollision()
+    {
+        int rayLength;
+        for(int direction = 0; direction < 4; direction++)
+        {
+            if(direction % 2 == 0)
+            {
+                rayLength = (int)(getImage().getHeight() / 2) + 1;
+            }
+            else
+            {
+                rayLength = (int)(getImage().getWidth() / 2) + 1;
+            }
+            
+            boolean break_loop = false;
+            for(int i = 1; i < rayLength; i++)
+            {
+                switch(direction)
+                {
+                    case 0:
+                        {
+                            if(FixGetColorAt(getX(), getY() + i).equals(Color.BLACK))
+                            {
+                                if(i == 1)
+                                {
+                                    break_loop = true;
+                                    break;
+                                }   
+                                    
+                                FixSetLocation(getX(), getY() - (rayLength - i));
+                                dy = 0;
+                            }
+                        }break;
+                        
+                    case 1:
+                        {
+                            if(FixGetColorAt(getX() + i, getY()).equals(Color.BLACK))
+                            {
+                                if(i == 1)
+                                {
+                                    break_loop = true;
+                                    break;
+                                }
+                                    
+                                FixSetLocation(getX() - (rayLength - i), getY());
+                            }
+                        }break;
+                        
+                    case 2:
+                        {
+                            if(FixGetColorAt(getX(), getY() - i).equals(Color.BLACK))
+                            {
+                                if(i == 1)
+                                {
+                                    break_loop = true;
+                                    break;
+                                }
+                                    
+                                FixSetLocation(getX(), getY() + (rayLength - i));
+                                dy = 0;
+                            }
+                        }break;
+                        
+                    case 3:
+                        {
+                            if(FixGetColorAt(getX() - i, getY()).equals(Color.BLACK))
+                            {
+                                if(i == 1)
+                                {
+                                    break_loop = true;
+                                    break;
+                                }
+                                    
+                                FixSetLocation(getX() + (rayLength - i), getY());
+                            }
+                        }
+                }
+                
+                if(break_loop == true)
+                    break;
+            
+            }
+        }
+        
+    }
     
     public void act() 
     {
@@ -256,7 +305,7 @@ public class Player extends Actor
       GravitySwitch();
       Dying();
       LevelComplete();
-      CollisionDetection();
+      WorldCollision();
       Restart();
       world.Timer();
      }
