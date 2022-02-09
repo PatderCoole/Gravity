@@ -1,7 +1,12 @@
 #BlueJ class context
 comment0.target=Wand
 comment0.text=\r\n\ Write\ a\ description\ of\ class\ Wand\ here.\r\n\ \r\n\ @author\ (your\ name)\ \r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
-comment1.params=
-comment1.target=void\ act()
-comment1.text=\r\n\ Act\ -\ do\ whatever\ the\ Wand\ wants\ to\ do.\ This\ method\ is\ called\ whenever\r\n\ the\ 'Act'\ or\ 'Run'\ button\ gets\ pressed\ in\ the\ environment.\r\n
-numComments=2
+comment1.params=new_id\ Image
+comment1.target=Wand(int,\ java.lang.String)
+comment2.params=s\ new_id\ Image
+comment2.target=Wand(boolean,\ int,\ java.lang.String)
+comment3.params=
+comment3.target=void\ toggle()
+comment4.params=
+comment4.target=void\ act()
+numComments=5

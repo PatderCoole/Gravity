@@ -8,12 +8,47 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Wand extends Actor
 {
-    /**
-     * Act - do whatever the Wand wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
+    public int id=0;
+    String image;
+    boolean solid = true;
+    public Wand(int new_id, String Image)
+    {
+        id = new_id;
+        image = Image;
+    }
+    public Wand(boolean s, int new_id, String Image)
+    {
+        solid = s;
+        id = new_id;
+        image = Image;
+    }
+    public void toggle()
+    {
+       solid = (solid == false)? true:false;
+       
+       
+        /*
+       if (solid == false)
+       {
+           solid = true;
+       }
+       else
+       {
+           solid = false;
+       }*/
+    }
+    
+    
     public void act()
     {
-        // Add your action code here.
+       
+        if (solid == true)
+        {
+            setImage(image);
+        }
+        else
+        {
+            setImage("Free.png");
+        }
     }
 }

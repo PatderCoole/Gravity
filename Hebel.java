@@ -1,5 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
-
+import java.util.List;
 /**
  * Write a description of class Hebel here.
  * 
@@ -8,37 +8,41 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Hebel extends Actor
 {
-    boolean is_active = false;
-    
+    int id = 0;
+    public boolean is_active = false;
+    public Hebel(int ID)
+    {
+        id = ID;
+    }
     public void interact()
     {
         if (isTouching(Player.class))
         {
+            if(is_active == false)
+            {
+               MyWorld world = (MyWorld)getWorld();
+            List<Wand> Listname = world.getObjects(Wand.class);
+            for(Wand w: Listname)
+            {
+                if(w.id==id)
+                {
+                    w.toggle();
+                }
+            } 
+            }
             is_active = true;
             setImage("Phone2.png");
         }
     }
-    public void check_LevelPosition()
-    {
-        MyWorld world = (MyWorld)getWorld();
-       if(world.currentLevel == 1)
-            {
-            setLocation(80, 115);
-            }
-       if(world.currentLevel == 2)
-            {
-            setLocation(400, 250);    
-            }
-       if(world.currentLevel == 3)
-            {
-            setLocation(1300, 1300);    
-            } 
-    }
+    
     
     public void act()
     {
        MyWorld world = (MyWorld)getWorld();
-       check_LevelPosition();
-       interact();     
+       interact();
+       if(world.currentLevel == 1)
+       {
+           setRotation(180);
+       }
     }
 }
